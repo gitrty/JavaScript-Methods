@@ -2,7 +2,6 @@
 // 1. 利用伪死循环实现暂停效果 
 /**
  * @name 暂停效果(浏览器假死状态)
- * @author 作者
  * @param {Number} ms 
  * @datetime 2019年7月8日14:45:18
  * @returns {null}
@@ -20,7 +19,6 @@ let sleep = ms => {
 // 2 . 解决ie7 及以下 document.getElementsByClassName() 失效的问题
 /**
  * @name getElementsByClassName兼容写法
- * @author 作者
  * @param {String} cls 
  * @datetime 2019年7月8日14:45:18
  * @returns {Array}
@@ -45,7 +43,6 @@ let className = cls => {
 // 3 . childNodes空节点删除  -> 解决 childNodes 获取到一个元素的子元素节点时,会将换行解析为空格节点的问题;
 /**
  * @name childNodes优化(去除空项)
- * @author 作者
  * @param {String} id 
  * @datetime 2019年7月8日14:45:18
  * @returns {Array}
@@ -66,7 +63,6 @@ let childNode = id => {
 // 4 . insertAfter 方法封装( 将新节点插入某个节点的后面 )
 /**
  * @name 将新节点插入某个节点后面
- * @author 作者
  * @param {DOM} parentNode 
  * @param {DOM} newNode 
  * @param {DOM} refNode 
@@ -83,7 +79,6 @@ let insertAfter = (parentNode, newNode, refNode) => {
 // 6 . 获取css样式值的兼容写法 (获取到的值有单位)
 /**
  * @name 获取样式值
- * @author 作者
  * @param {DOM} el 
  * @param {String} attr 
  * @datetime 2019年7月8日14:45:18
@@ -101,7 +96,6 @@ let getStyle = (el, attr) => {
 // 6.1动画函数1 => 需要配合以上封装的getStyle(el,attr)方法
 /**
  * @name 匀速动画函数 
- * @author 作者
  * @param {DOM} el 
  * @param {String} attr 
  * @param {Number} target 
@@ -135,7 +129,6 @@ let animate_banner = (el, attr, target,cb) => {
 // 6.2动画函数2 => 需要配合以上封装的getStyle(el,attr)方法
 /**
  * @name 缓速动画函数 
- * @author 作者
  * @param {DOM} el 
  * @param {String} attr 
  * @param {Number} target 
