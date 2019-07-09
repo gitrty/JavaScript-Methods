@@ -105,7 +105,7 @@
             temIndex++;
             // 回调函数判断执行完成一轮则设置 left 0  瞬间返回第一张
             animate_slow(ul, {
-                'left': ul.children[temIndex].offsetWidth * (-temIndex)
+                'left': ul.children[0].offsetWidth * (-temIndex)
             }, () => {
                 if (temIndex == 5) {
                     temIndex = 0;
