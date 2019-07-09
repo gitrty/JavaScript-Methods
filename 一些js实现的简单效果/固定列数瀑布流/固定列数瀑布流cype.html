@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        body {
+            width: 1600px;
+        }
+
+        .item {
+            padding-left: 5px;
+            padding-right: 5px;
+            float: left;
+        }
+
+        img {
+            width: 180px;
+            padding: 3px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="./toyo.js"></script>
+</head>
+
+<body>
+    <div id="box">
+
+    </div>
+    <script>
+        // 动态创建节点(添加图片)
+        for (let i = 1; i < 43; i++) {
+            let newDiv = document.createElement('div');
+            let newImg = document.createElement('img');
+            newDiv.classList.add('item')
+            newImg.setAttribute('src', 'images/images1/img (' + i + ').jpg');
+            newDiv.appendChild(newImg);
+            document.querySelector('#box').appendChild(newDiv);
+        }
+
+        let pArr = [];
+        // 图片高度需要等页面加载完成后才能获取到
+        window.onload = () => {
+            Array.from(childNode('box')).forEach((val, index) => {
+                if (index < 4) {
+                    pArr.push(val.offsetHeight);
+                } else {
+                    let minIndex = 0;
+                    pArr.reduce((val1, val2, ix) => {
+                        if (val1 > val2) {
+                            minIndex = ix;
+                            return val2;
+                        } else {
+                            return val1;
+                        }
+                    })
+                    val.style.position = 'absolute';
+                    val.style.left = val.offsetWidth * minIndex+'px';
+                    val.style.top = pArr[minIndex] + 'px';
+                    pArr[minIndex] +=val.offsetHeight;
+                }
+            })
+            // console.info(pArr)
+        }
+    </script>
+</body>
+
+
+</html>

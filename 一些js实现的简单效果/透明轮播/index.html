@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./toyo.js"></script>
+    <style>
+        #box {
+            height: 500px;
+            width: 800px;
+            border: 1px solid #c0c0c0;
+
+            position: absolute;
+            margin: 100px auto;
+            left: 100px;
+
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+            height: 100%;
+            width: 100%;
+        }
+
+        ul>li {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            font-size: 30px;
+            text-align: center;
+
+        }
+
+        ol {
+            list-style: none;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        ol>li {
+            height: 100px;
+            width: 146px;
+            margin-left: 10px;
+
+            float: left;
+            text-align: center;
+            border: 1px solid #999999;
+        }
+
+        ol>li img {
+            height: 100px;
+            width: 146px;
+            float: left;
+        }
+
+        ol>li {
+            opacity: 0.2;
+        }
+
+        ol>li:nth-child(1) {
+            opacity: 1;
+        }
+
+        ul>li {
+            z-index: 0;
+        }
+
+        ul>li:nth-child(1) {
+            z-index: 999;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div id="box">
+        <ul id="ul">
+            <li><a href="javascript:void(0)"><img src="images/slidepic1.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic2.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic3.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic4.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic5.jpg" alt="" /></a></li>
+        </ul>
+
+        <ol id="ol">
+            <li><a href="javascript:void(0)"><img src="images/slidepic1.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic2.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic3.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic4.jpg" alt="" /></a></li>
+            <li><a href="javascript:void(0)"><img src="images/slidepic5.jpg" alt="" /></a></li>
+        </ol>
+    </div>
+
+    <script>
+        var oUl = document.getElementById("ul");
+        var oOl = document.getElementById("ol");
+        var oBox = document.getElementById("box");
+        let lis1 = oUl.children;
+        let lis2 = oOl.children;
+        // 自动轮播
+        let imgIndex = 0;
+        let autoPlay = () => {
+            Array.from(lis1).forEach((val, index) => {
+                animate_slow(lis1[index], { 'opacity': 0 });
+            })
+            Array.from(lis2).forEach((val, index) => {
+                animate_slow(lis2[index], { 'opacity': 0.3 })
+            })
+            animate_slow(lis1[imgIndex], { 'opacity': 1 });
+            animate_slow(lis2[imgIndex], { 'opacity': 1 })
+            imgIndex++;
+            if (imgIndex == 5) {
+                imgIndex = 0;
+            }
+        }
+        window.timer = setInterval(autoPlay, 1500);
+        // 鼠标移入暂停(清除定时器)
+        oBox.onmouseenter = () => {
+            clearInterval(window.timer);
+        }
+        // 鼠标移出继续播放(新建定时器)
+        oBox.onmouseleave = () => {
+            window.timer = setInterval(autoPlay, 1500);
+        }
+        // 点击小图片显示大图片
+        Array.from(lis2).forEach((val, index) => {
+            val.onclick = () => {
+                imgIndex = index;
+                autoPlay();
+            }
+        })
+    </script>
+
+</body>
+
+</html>

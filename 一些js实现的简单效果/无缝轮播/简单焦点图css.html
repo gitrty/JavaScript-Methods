@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+    </style>
+
+    <script src="./toyo.js"></script>
+</head>
+
+<body>
+
+    <div class="all" id="all">
+        <div class="screen">
+            <ul id="ul">
+                <li><img src="images/1.jpg" width="500" height="200" /></li>
+                <li><img src="images/2.jpg" width="500" height="200" /></li>
+                <li><img src="images/3.jpg" width="500" height="200" /></li>
+                <li><img src="images/4.jpg" width="500" height="200" /></li>
+                <li><img src="images/5.jpg" width="500" height="200" /></li>
+            </ul>
+            <ol id="ol">
+
+            </ol>
+        </div>
+    </div>
+    <script>
+        let ul = document.getElementById('ul');
+        let ol = document.getElementById('ol');
+        // 动态添加小方点
+        Array.from(childNode('ul')).forEach((val, index) => {
+            let newLi = document.createElement('li');
+            newLi.innerHTML = index + 1;
+            ol.appendChild(newLi);
+        })
+        // 第一个小方点添加样式
+        ol.children[0].classList.add('current')
+
+        // clone 第一个li 并添加ul到最后
+        let lastLi = childNode('ul')[0].cloneNode(true);
+        ul.appendChild(lastLi);
+
+        // 自动轮播
+        let temIndex = 0;
+        let autoPlay = () => {
+            temIndex++;
+            // 回调函数判断执行完成一轮则设置 left 0  瞬间返回第一张
+            animate_slow(ul, {
+                'left': ul.children[temIndex].offsetWidth * (-temIndex)
+            }, () => {
+                if (temIndex == 5) {
+                    temIndex = 0;
+                    ul.style.left = 0;
+                }
+            })
+            // 轮播时小方点轮换样式
+            Array.from(ol.children).forEach((val, index) => {
+                val.classList.remove('current');
+            })
+            // 判断当播放到最后一张时 小方点回到 1
+            if (temIndex == 5) {
+                ol.children[0].classList.add('current')
+            } else {
+                ol.children[temIndex].classList.add('current')
+            }
+        }
+        window.timer = setInterval(autoPlay, 1500);
+
+        // 鼠标移入时停止轮播 (清除定时器)
+        document.querySelector('.screen').onmouseenter = () => {
+            clearInterval(window.timer);
+        }
+        // 鼠标移出后继续轮播 (新建定时器)
+        document.querySelector('.screen').onmouseleave = () => {
+            window.timer = setInterval(autoPlay, 1500);
+        }
+
+        // 点击小方点切换方式与轮播
+        Array.from(childNode('ol')).forEach((val, index) => {
+            val.onclick = () => {
+                Array.from(childNode('ol')).forEach(value => {
+                    value.classList.remove('current')
+                })
+                val.classList.add('current');
+                temIndex = index - 1;
+                autoPlay();
+            }
+        })
+    </script>
+</body>
+</html>

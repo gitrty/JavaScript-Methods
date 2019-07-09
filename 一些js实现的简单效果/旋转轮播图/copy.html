@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>旋转木马轮播图</title>
+    <link rel="stylesheet" href="css/css.css" />
+    <script src="./toyo.js"></script>
+
+</head>
+
+<body>
+    <div class="wrap" id="wrap">
+        <div class="slide" id="slide">
+            <ul>
+                <li>
+                    <a href="#"><img src="images/slidepic1.jpg" alt="" /></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/slidepic2.jpg" alt="" /></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/slidepic3.jpg" alt="" /></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/slidepic4.jpg" alt="" /></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/slidepic5.jpg" alt="" /></a>
+                </li>
+            </ul>
+            <div class="arrow" id="arrow">
+                <a href="javascript:;" class="prev"></a>
+                <a href="javascript:;" class="next"></a>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    var jsonData = [
+        {   //  1
+            width: 400,
+            top: 20,
+            left: 50,
+            opacity: 0.2,
+            zIndex: 2
+        },
+        {  // 2
+            width: 600,
+            top: 70,
+            left: 0,
+            opacity: .80,
+            zIndex: 3
+        },
+        {   // 3
+            width: 800,
+            top: 100,
+            left: 200,
+            opacity: 1,
+            zIndex: 4
+        },
+        {  // 4
+            width: 600,
+            top: 70,
+            left: 600,
+            opacity: .80,
+            zIndex: 3
+        },
+        {   //5
+            width: 400,
+            top: 20,
+            left: 750,
+            opacity: .20,
+            zIndex: 2
+        }
+    ];
+
+    let oli = document.getElementsByTagName('li');
+    let arrow = document.getElementById('arrow');
+    let slide = document.getElementById('slide');
+    // 鼠标移入显示左右箭头
+    slide.onmouseenter = () => {
+        arrow.style.opacity = 1
+    }
+    slide.onmouseleave = () => {
+        arrow.style.opacity = 0
+    }
+    // 点击箭头轮播
+    let clickFlag = true;  //节流控制
+    // 左
+    childNode('arrow')[0].onclick = () => {
+        if (clickFlag) {
+            clickFlag = false;
+            jsonData.unshift(jsonData.pop());
+            Array.from(oli).forEach((val, index) => {
+                animate_slow(val, jsonData[index], () => {
+                    clickFlag = true;   //动画执行完成后 才可以继续点击
+                });
+            })
+        }
+    }
+    // 右
+    childNode('arrow')[1].onclick = () => {
+        if (clickFlag) {
+            clickFlag = false;
+            jsonData.push(jsonData.shift())
+            Array.from(oli).forEach((val, index) => {
+                animate_slow(val, jsonData[index], () => {
+                    clickFlag = true;
+                });
+            })
+        }
+    }
+    // 图片定位
+    Array.from(oli).forEach((val, index) => {
+        animate_slow(val, jsonData[index]);
+    })
+
+</script>
