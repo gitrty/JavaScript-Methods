@@ -107,7 +107,7 @@
             animate_slow(ul, {
                 'left': ul.children[0].offsetWidth * (-temIndex)
             }, () => {
-                if (temIndex == 5) {
+                if (temIndex >= 5) {
                     temIndex = 0;
                     ul.style.left = 0;
                 }
@@ -117,7 +117,7 @@
                 val.classList.remove('current');
             })
             // 判断当播放到最后一张时 小方点回到 1
-            if (temIndex == 5) {
+            if (temIndex >= 5) {
                 ol.children[0].classList.add('current')
             } else {
                 ol.children[temIndex].classList.add('current')
