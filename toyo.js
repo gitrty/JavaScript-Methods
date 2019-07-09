@@ -86,10 +86,12 @@ let insertAfter = (parentNode, newNode, refNode) => {
  */
 // 调用方法 : getStyle(<节点>,<需要获取的css样式>)
 let getStyle = (el, attr) => {
+    // chrome等浏览器
     if (window.getComputedStyle) {
         return window.getComputedStyle(el, null)[attr];
     }
-    el.currentStyle[attr];
+    // ie 678
+    return el.currentStyle[attr];
 }
 
 //************************************************************************************
@@ -103,7 +105,7 @@ let getStyle = (el, attr) => {
  * @datetime 2019年7月8日14:45:18
  * @returns {null}
  */
-// 调用方法 : animate_banner(<节点>,<top或left>,<相对于最近有定位的父元素的left或top>)
+// 调用方法 : animate_banner(<节点>,<top或left>,<位移距离(相对最近的有定位的元素)>)
 let animate_banner = (el, attr, target,cb) => {
     // 清除之前的定时器
     clearInterval(el.timer);
@@ -136,7 +138,7 @@ let animate_banner = (el, attr, target,cb) => {
  * @datetime 2019年7月8日14:45:18
  * @returns {null}
  */
-// 调用方法 animate_ease(<节点>,<top或left>,<相对于最近有定位的父元素的left或top>)
+// 调用方法 animate_ease(<节点>,<top或left>,<位移距离(相对最近的有定位的元素)>)
 let animate_ease = (el, attr, target,cb) => {
     clearInterval(el.timer);
     el.timer = setInterval(() => {
@@ -155,4 +157,65 @@ let animate_ease = (el, attr, target,cb) => {
         }
         // 动画时间默认30ms ,可自定义
     }, 30)
+}
+
+//************************************************************************************
+// 6.3 缓动画 兼容封装  => 需要配合以上封装的getStyle(el,attr)方法
+/**
+ * @name 缓动画--多属性变化
+ * @param {DOM} el 
+ * @param {Object} json 包含需要改变的 属性:属性值
+ * @param {Function} callback 回调函数
+ * @datetime 2019年7月9日10:32:36
+ * @returns {null}
+ */
+// 调用方法 例: 
+// animate_slow(oBox1,{
+//     'left':100,
+//     'top':50,
+//     'opacity':0.5,
+//     'width':100,
+// },()=>{})
+let animate_slow = (el, json, callback) => {
+    // 清除之前的定时器
+    clearInterval(el.timer);
+    // 创建新的定时器
+    el.timer = setInterval(() => {
+        let flag = true;
+        for (let attr in json) {
+            // 当前值
+            let current = 0;
+            // 目标值
+            let target = 0;
+            if (attr == 'opacity') {
+                current = getStyle(el, attr) * 100;
+                target = json[attr] * 100;
+            } else {
+                current = parseInt(getStyle(el, attr));
+                target = parseFloat(json[attr]);
+            }
+            // 步长 (目标值-当前值)/10  (默认除10,可自定义)
+            let steps = (target - current) / 10;
+            steps = steps > 0 ? Math.ceil(steps) : Math.floor(steps);
+            // 新的位置 = 当前位置 + 步长
+            if (attr == 'opacity') {
+                el.style[attr] = (current + steps) / 100;
+                el.style.filter = "alpha(opacity = " + (current + steps) + ")"
+            } else if (attr == 'zIndex') {
+                el.style.zIndex = target;
+            } else {
+                el.style[attr] = current + steps + 'px';
+            }
+            if (current != target) {
+                flag = false;
+            }
+        }
+        if (flag) {
+            clearInterval(el.timer);
+            if (typeof (callback) == 'function') {
+                callback();
+            }
+        }
+        // 默认30ms ,可自定义
+    }, 30);
 }
