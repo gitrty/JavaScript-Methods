@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="./toyo.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        #box {
+            width: 360px;
+            height: 460px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            position: relative;
+            margin-left: 50px;
+            margin-top: 50px;
+        }
+
+        #box #middleImg {
+            width: 350px;
+            height: 350px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            position: relative;
+        }
+
+        #box #middleImg img {
+            width: 350px;
+            height: 350px;
+        }
+
+        #box #middleArea {
+            width: 100px;
+            height: 100px;
+            background: rgba(100, 222, 200, 0.5);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+        }
+
+        #box #small {
+            /*background: red;*/
+            width: 360px;
+            height: 50px;
+            margin-top: 10px;
+        }
+
+        #box #small li,
+        #box #small li img {
+            width: 48px;
+            height: 48px;
+        }
+
+        #box #small li {
+            float: left;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        #box #bigArea {
+            position: absolute;
+            left: 420px;
+            top: 50px;
+            overflow: hidden;
+            width: 400px;
+            height: 400px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        #box #bigArea img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 800px;
+            height: 800px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="box">
+        <div id="middleImg">
+            <img src="images/images2/1_2.jpeg" />
+            <div id="middleArea"></div>
+        </div>
+        <div id="small">
+            <ul>
+                <li><img src="images/images2/1_1.jpeg" /></li>
+                <li><img src="images/images2/2_1.jpeg" /></li>
+                <li><img src="images/images2/3_1.jpeg" /></li>
+                <li><img src="images/images2/4_1.jpeg" /></li>
+                <li><img src="images/images2/5_1.jpeg" /></li>
+            </ul>
+        </div>
+        <div id="bigArea">
+            <img id="bigImg" src="images/images2/1_3.jpeg" />
+        </div>
+    </div>
+    <script>
+        let middleImg = document.getElementById('middleImg');
+        let middleArea = document.getElementById('middleArea');
+        let bigArea = document.getElementById('bigArea');
+        let bigImg = document.getElementById('bigImg');
+        let box = document.getElementById('box');
+        // 计算小蓝块大小 比例
+        middleArea.style.width = parseInt(getStyle(bigArea, 'width')) / parseInt(getStyle(bigImg, 'width')) * parseInt(getStyle(middleImg, 'width')) + 'px';
+        middleArea.style.height = parseInt(getStyle(bigArea, 'height')) / parseInt(getStyle(bigImg, 'height')) * parseInt(getStyle(middleImg, 'height')) + 'px';
+
+        // 计算大图和小图的比例 ( 计算大图移动距离时使用 )
+        // 由于隐藏的元素无法通过 offsetWidth 和 offsetHeight 获取宽高,所以此处使用封装过的getStyle()获取
+        let srcaleX = parseInt(getStyle(bigImg, 'width')) / parseInt(getStyle(middleImg, 'width'));
+        let srcaleY = parseInt(getStyle(bigImg, 'height')) / parseInt(getStyle(middleImg, 'height'));
+        middleImg.onmouseenter = () => {
+            // 鼠标移入移出显示/隐藏 小蓝块 与 大图
+            middleArea.style.display = 'block';
+            bigArea.style.display = 'block';
+            middleImg.onmousemove = ev => {
+                ev = ev || window.event;
+                // 计算小蓝块移动 距离 ( 跟着鼠标移动 )
+                let mX = ev.pageX - box.offsetLeft - middleImg.offsetLeft - middleArea.offsetWidth / 2;
+                let mY = ev.pageY - box.offsetTop - middleImg.offsetLeft - middleArea.offsetHeight / 2;
+                // 阻止小蓝块移出 中图
+                if (mX <= 0) { mX = 0; }
+                if (mY <= 0) { mY = 0; }
+                if (mX >= middleImg.offsetWidth - middleArea.offsetWidth) {
+                    mX = middleImg.offsetWidth - middleArea.offsetWidth
+                }
+                if (mY >= middleImg.offsetHeight - middleArea.offsetHeight) {
+                    mY = middleImg.offsetHeight - middleArea.offsetHeight
+                }
+                // 小蓝块移动距离
+                middleArea.style.left = mX + 'px';
+                middleArea.style.top = mY + 'px';
+                // 大图移动距离 = 小蓝块移动的距离* (大图/小图)  
+                bigImg.style.left = srcaleX * -mX + 'px';
+                bigImg.style.top = srcaleY * -mY + 'px';
+            }
+        }
+        // 鼠标移出后隐藏小蓝块与大图,并移除鼠标移动事件
+        middleImg.onmouseleave = () => {
+            middleArea.style.display = 'none';
+            bigArea.style.display = 'none';
+            middleImg.onmousemove = null;
+        }
+        // 点击切换图片
+        let lis = document.getElementById('small').querySelectorAll('li');
+        Array.from(lis).forEach((val, index) => {
+            val.onclick = () => {
+                middleImg.querySelector('img').src = `images/images2/${index + 1}_2.jpeg`;
+                bigArea.querySelector('img').src = `images/images2/${index + 1}_3.jpeg`;
+            }
+        })
+    </script>
+</body>
+
+</html>
