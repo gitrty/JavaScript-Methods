@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>微博</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background-color: skyblue;
+        padding-top: 20px;
+    }
+
+    .box {
+        width: 800px;
+        height: 100px;
+        background-color: red;
+        margin: 100px auto;
+    }
+
+    #btn1 {
+        float: right;
+    }
+
+    #h2 {
+        display: inline-block;
+    }
+
+    .card {
+        margin-bottom: 10px;
+        padding: 4px 10px;
+    }
+
+    .mymodal {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .6);
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: none;
+    }
+
+    .cont {
+        width: 440px;
+        height: 350px;
+        background-color: #fff;
+        opacity: 1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -220px;
+        margin-top: -165px;
+        border-radius: 10px;
+    }
+
+    .top {
+        height: 60px;
+        background-color: #58bc58;
+        border-radius: 10px 10px 0 0;
+        padding: 0 10px;
+        font-size: 20px;
+        color: #fff;
+        line-height: 60px;
+    }
+
+    .top span {
+        float: right;
+        cursor: pointer;
+    }
+
+    #inp {
+        display: block;
+        width: 380px;
+        height: 200px;
+        margin: 20px auto;
+        resize: none
+    }
+
+    .btn2 {
+        display: block;
+        background-color: #ccc;
+        margin: 0 auto;
+    }
+
+    .del {
+        float: right;
+    }
+</style>
+
+<body>
+    <!-- 内容区域 -->
+    <div class="container">
+        <h2 id="h2">微博</h2>
+        <button id="btn1" class="btn btn-primary">发布内容</button>
+
+        <div class="card">
+            一条内容111111111111111111111111
+            <a href="javascript:void(0)" class="del" onclick=del(this)>删除</a>
+        </div>
+        <div class="card">
+            两条内容2222222222222222222222
+            <a href="javascript:void(0)" class="del" onclick=del(this)>删除</a>
+        </div>
+        <div class="card">
+            三条内容33333333333333333333
+            三条内容33333333333333333333
+            三条内容33333333333333333333
+            <a href="javascript:void(0)" class="del" onclick=del(this)>删除</a>
+        </div>
+    </div>
+    <!-- 拟态框 -->
+    <div class="mymodal" id="mymodal">
+        <div class="cont">
+            <div class="top" id="top">
+                请输入内容
+                <span id="close">关闭</span>
+            </div>
+            <!-- 输入框 -->
+            <textarea id="inp"> </textarea>
+            <button type="button" class="btn2 btn" id="btn2">发布</button>
+        </div>
+    </div>
+
+    <script>
+        let btn1 = document.getElementById('btn1');
+        let close = document.getElementById('close');
+        let btn2 = document.getElementById('btn2');
+        let inp = document.getElementById('inp');
+        let container = document.querySelector('.container');
+        let otop = document.querySelector('#top');
+        let cont = document.querySelector('.cont');
+
+        // 打开/关闭发布框
+        btn1.onclick = () => {
+            document.getElementById('mymodal').style.display = 'block';
+            inp.value = '';
+            // 点开时将拟态框还原到页面中间
+            cont.style.marginLeft = -cont.offsetWidth / 2 + 'px';
+            cont.style.marginTop = -cont.offsetHeight / 2 + 'px';
+            cont.style.left = '50%';
+            cont.style.top = '50%';
+        }
+        // 关闭拟态框
+        close.onclick = () => {
+            document.getElementById('mymodal').style.display = 'none';
+        }
+
+        // 发布及验证
+        btn2.onclick = () => {
+            let con = inp.value;
+            if (con == '' || con == null) {
+                alert('内容不能为空');
+                return;
+            }
+            if (/^.{1,50}$/i.test(con) == false) {
+                alert('最多输入50个字');
+                return;
+            }
+            // 动态添加节点 - 验证成功
+            let newDiv = document.createElement('div');
+            newDiv.innerHTML = con + '<a href="javascript:void(0)" class="del" onclick = del(this)>删除</a>';
+            newDiv.classList.add('card');
+            // 将新发布的内容添加到最前面
+            let oneCard = container.querySelectorAll('.card')[0];
+            // console.info(oneCard)
+            container.insertBefore(newDiv,oneCard);
+            document.getElementById('mymodal').style.display = 'none';
+        }
+
+        // 删除
+        let del = el => { el.parentNode.remove() }
+
+        // 拖动 - 按下
+        otop.onmousedown = ev => {
+            ev = ev || window.event;
+            let disX = ev.clientX - cont.offsetLeft;
+            let disY = ev.clientY - cont.offsetTop;
+            // 拖动 - 移动
+            otop.onmousemove = ev => {
+                ev = ev || window.event;
+                cont.style.marginLeft = 0;
+                cont.style.marginTop = 0;
+                mX = ev.clientX - disX;
+                mY = ev.clientY - disY;
+                // 拖动 - 阻止拟态框移出可视区域
+                if (mX < 0) mX = 0;
+                if (mY < 0) mY = 0;
+                if (mX >= document.documentElement.offsetWidth - cont.offsetWidth)
+                    mX = document.documentElement.offsetWidth - cont.offsetWidth;
+                if (mY >= document.documentElement.offsetHeight - cont.offsetHeight)
+                    mY = document.documentElement.offsetHeight - cont.offsetHeight;
+
+                cont.style.left = mX + 'px';
+                cont.style.top = mY + 'px';
+            }
+            // 拖动 - 松开
+            document.onmouseup = () => {
+                otop.onmousemove = null;
+                document.onmouseup = null;
+            }
+        }
+    </script>
+</body>
+
+</html>

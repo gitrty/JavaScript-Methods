@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>作业</title>
+</head>
+<style>
+    .box {
+        width: 100px;
+        height: 100px;
+        background-color: indianred;
+        position: absolute;
+    }
+
+    .box2 {
+        width: 100px;
+        height: 100px;
+        background-color: gold;
+        position: absolute;
+        left: 140px;
+    }
+
+    .box3 {
+        width: 100px;
+        height: 100px;
+        background-color: #58bc58;
+        position: absolute;
+        left: 300px;
+    }
+</style>
+
+<body>
+    <div class="box">
+    </div>
+    <div class="box2">
+    </div>
+    <div class="box3">
+    </div>
+
+    <script>
+        // 1, 采用面向对象的思路实现拖拽功能  
+        function Darg() {
+
+        }
+        Darg.prototype.init = function (el) {
+            this.oBox = document.querySelector(el);
+            this.downDarg();
+        }
+        Darg.prototype.downDarg = function () {
+            this.oBox.onmousedown = ev => {    //此处使用箭头函数,所以this指向Darg内
+                let disX = ev.pageX - this.oBox.offsetLeft;
+                let disY = ev.pageY - this.oBox.offsetTop;
+                this.moveDarg(disX, disY);
+                this.upDarg();
+            }
+        }
+        Darg.prototype.moveDarg = function (disX, disY) {
+            let _this= this;
+            document.onmousemove = function (ev) {
+                ev = ev || window.event;
+                _this.oBox.style.left = ev.pageX - disX + 'px';
+                _this.oBox.style.top = ev.pageY - disY + 'px';
+            }
+        }
+        Darg.prototype.upDarg = function () {
+            document.onmouseup = () => {
+                document.onmousemove = document.onmouseup = null;
+            }
+        }
+        let darg = new Darg();
+        darg.init('.box');
+        darg.init('.box2')
+        darg.init('.box3')
+    </script>
+</body>
+
+</html>

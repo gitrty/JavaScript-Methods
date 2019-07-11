@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./src/js/jquery.cookie.js"></script>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .box {
+        width: 600px;
+        height: 830px;
+        background-color: #ddd;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    fieldset {
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .pwdin {
+        width: 300px;
+        height: 40px;
+        background-color: red;
+        border-radius: 10px;
+        display: flex;
+        line-height: 40px;
+        text-align: center;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .pwdin span {
+        flex: 1
+    }
+
+    .pwdin span:nth-child(1) {
+        background-color: indianred;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .pwdin span:nth-child(2) {
+        background-color: gold;
+    }
+
+    .pwdin span:nth-child(3) {
+        background-color: #58bc58;
+        border-radius: 0 10px 10px 0;
+    }
+
+    .code {
+        display: inline-block;
+        width: 100px;
+        height: 38px;
+        background-color: #fff;
+        vertical-align: bottom;
+        border-radius: 4px;
+        margin-left: 10px;
+        border: 3px solid #ccc;
+        line-height: 32px;
+        font-size: 20px;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    #codeipt {
+        vertical-align: bottom;
+    }
+
+    #cook {
+        color: #888;
+    }
+
+    #cook,
+    #sub {
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <div class="box">
+        <div class="alert alert-danger" id="tip">
+            请填写资料
+        </div>
+        <form>
+            <fieldset>账户详细资料</fieldset>
+            <div class="form-group">
+                <label for="">用户名称:</label>
+                <input type="text" class="form-control" id="username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="">登录密码:</label>
+                <input type="password" class="form-control" id="pwd1" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+                <label for="">重复密码:</label>
+                <input type="password" class="form-control" id="pwd2" placeholder="请重复密码">
+            </div>
+            <div class="form-group">
+                <label for="">密码安全级别:</label>
+                <div class="pwdin">
+                    <span>低</span>
+                    <span>中</span>
+                    <span>高</span>
+                </div>
+            </div>
+
+            <fieldset>个人信息资料</fieldset>
+            <div class="form-group">
+                <label for="">身份证:</label>
+                <input type="text" class="form-control" id="id" placeholder="请输入身份证">
+            </div>
+            <div class="form-group">
+                <label for="">中奖通知手机:</label>
+                <input type="text" class="form-control" id="tel" placeholder="请输入手机号">
+            </div>
+            <div class="form-group">
+                <label for="" style="display: block">验证码:</label>
+                <input type="text" class="form-control" id="codeipt" placeholder="请输入验证码"
+                    style="width: 140px;display: inline-block;">
+                <div class="code codearea">3242</div>
+            </div>
+            <label for="" id="cook"><input type="checkbox" id="cookipt" checked>10天内免登陆</label>
+            <button type="submit" class="btn btn-primary" id="sub">登录</button>
+
+        </form>
+    </div>
+    <script>
+        let uName = document.getElementById('username');
+        let uPwd1 = document.getElementById('pwd1');
+        let uPwd2 = document.getElementById('pwd2');
+        let uId = document.getElementById('id');
+        let uTel = document.getElementById('tel');
+        let uCode = document.getElementById('codeipt');
+        let Usub = document.getElementById('sub');
+        let Utip = document.getElementById('tip');
+        let codeArea = document.querySelector('.codearea');
+        let cookIpt = document.getElementById('cookipt');
+        // 用户名验证
+        let nameTip = false;
+        uName.onchange = () => {
+            let val = uName.value;
+            console.info(val)
+            if (val == '') {
+                nameTip = false;
+                return;
+            }
+            if (/^[a-zA-Z_]\w{7,}$/.test(val)) {
+                Utip.innerHTML = '用户名可用';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                nameTip = true;
+            } else {
+                Utip.innerHTML = '用户名只能包含数字、字母、下划线, 不能以数字开头，且不小于8位'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                nameTip = false;
+            }
+        }
+        // 密码验证
+        let pwd1Tip = false;
+        uPwd1.onchange = () => {
+            let val = uPwd1.value;
+            if (/^.{6,20}$/.test(val)) {
+                Utip.innerHTML = '密码可用';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                pwd1Tip = true;
+            } else {
+                Utip.innerHTML = '密码长度在6-20位之间'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                pwd1Tip = false;
+            }
+            pwdK()
+        }
+        // 重复密码验证
+        let pwdTip2 = false;
+        uPwd2.onchange = () => {
+            let val = uPwd2.value;
+            let oldval = uPwd1.value;
+            if (val == oldval) {
+                Utip.innerHTML = '重复密码正确';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                pwdTip2 = true;
+            } else {
+                Utip.innerHTML = '两次密码不一致'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                pwdTip2 = false;
+            }
+        }
+        // 身份证验证
+        let uIdTip = false;
+        uId.onchange = () => {
+            let val = uId.value;
+            if (/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/.test(val)) {
+                Utip.innerHTML = '身份证输入正确';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                uIdTip = true;
+            } else {
+                Utip.innerHTML = '身份证有误'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                uIdTip = false;
+            }
+        }
+        // 手机号验证
+        let uTelTip = false;
+        uTel.onchange = () => {
+            let val = uTel.value;
+            if (/^1[3456789]\d{9}$/.test(val)) {
+                Utip.innerHTML = '手机号正确';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                uTelTip = true;
+            } else {
+                Utip.innerHTML = '手机号有误'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                uTelTip = false;
+            }
+        }
+        // 随机生成验证码
+        let randomCode = () => {
+            let coded = '';
+            for (let i = 0; i < 4; i++) {
+                if (Math.random() > 0.5) {
+                    // 数字
+                    coded += parseInt(Math.random() * 10);
+                } else {
+                    // 大写字母
+                    coded += String.fromCharCode(parseInt((Math.random() * 26) + 65));
+                }
+            }
+            codeArea.innerHTML = coded;
+        }
+        // 验证密码安全级别
+        let pwdK = () => {
+            let val = uPwd1.value;
+            let pwdin = document.querySelector('.pwdin');
+            // console.info(pwdin.children)
+            if (val == '' || val.length < 6) {
+                Array.from(pwdin.children).forEach((el, index) => {
+                    el.style.backgroundColor = '#fff';
+                })
+                return;
+            } else if (val.length >= 16) {
+                Array.from(pwdin.children).forEach((el, index) => {
+                    el.style.backgroundColor = '#fff';
+                })
+                pwdin.children[2].style.backgroundColor = '#58bc58';
+                return;
+            } else if (val.length >= 11) {
+                Array.from(pwdin.children).forEach((el, index) => {
+                    el.style.backgroundColor = '#fff';
+                })
+                pwdin.children[1].style.backgroundColor = 'gold';
+                return;
+            } else if (val.length >= 6) {
+                Array.from(pwdin.children).forEach((el, index) => {
+                    el.style.backgroundColor = '#fff';
+                })
+                pwdin.children[0].style.backgroundColor = 'indianred';
+                return;
+            }
+        }
+
+        window.onload = () => {
+            // 进入页面加载验证码
+            randomCode();
+            // 进入页面验证密码安全级别
+            pwdK();
+            // 防止cookie中的内容登陆失败
+            uName.onchange();
+            uPwd1.onchange();
+            uPwd2.onchange();
+            uId.onchange();
+            uTel.onchange();
+        }
+        // 点击刷新验证码
+        codeArea.onclick = () => {
+            randomCode();
+        }
+        // 验证码验证
+        let uCodeTip = false;
+        uCode.onchange = () => {
+            let val = uCode.value;
+            let newCode = codeArea.innerHTML;
+            if (val.toUpperCase() == newCode.toUpperCase()) {
+                Utip.innerHTML = '验证码正确';
+                Utip.classList.remove('alert-danger');
+                Utip.classList.add('alert-success');
+                uCodeTip = true;
+            } else {
+                Utip.innerHTML = '验证码错误'
+                Utip.classList.remove('alert-success');
+                Utip.classList.add('alert-danger');
+                uCodeTip = false;
+            }
+        }
+        // 登陆验证
+        Usub.onclick = () => {
+            // 解决第二次密码验证后修改第一次密码导致两次密码不一致但不会验证失败的问题
+            if(uPwd1.value!=uPwd2.value){
+                alert('两次密码不一致');
+                return;
+            }
+            // console.info(nameTip, pwd1Tip, pwdTip2, uIdTip, uTelTip, uCodeTip)
+            if (nameTip && pwd1Tip && pwdTip2 && uIdTip && uTelTip && uCodeTip) {
+                if (cookIpt.checked) {
+                    let userInfo = {
+                        username: uName.value,
+                        userpwd: uPwd1.value,
+                        uid: uId.value,
+                        utel: uTel.value
+                    }
+                    alert('登陆成功')
+                    $.cookie('user-info', JSON.stringify(userInfo), { expires: 10 });
+                }
+            } else {
+                alert('信息有误')
+            }
+            // 阻止表单提交
+            return false;
+        }
+        // 获取上次保存的cookie
+        let cookieinfo = JSON.parse($.cookie('user-info') || '{}');
+        if (cookieinfo != '') {
+            uName.value = cookieinfo.username;
+            uTel.value = cookieinfo.utel;
+            uId.value = cookieinfo.uid;
+            uPwd1.value = cookieinfo.userpwd;
+            uPwd2.value = cookieinfo.userpwd;
+        }
+        // console.info(cookieinfo)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>作业</title>
+</head>
+<style>
+    .box {
+        width: 100px;
+        height: 100px;
+        background-color: indianred;
+        position: absolute;
+    }
+
+    .box2 {
+        width: 100px;
+        height: 100px;
+        background-color: gold;
+        position: absolute;
+        left: 140px;
+    }
+
+    .box3 {
+        width: 100px;
+        height: 100px;
+        background-color: #58bc58;
+        position: absolute;
+        left: 300px;
+    }
+</style>
+
+<body>
+    <div class="box">
+    </div>
+    <div class="box2">
+    </div>
+    <div class="box3">
+    </div>
+
+    <script>
+        // 1, 采用面向对象的思路实现拖拽功能 
+        let Darg = {
+            init(el) {
+                this.oBox = document.querySelector(el);
+                this.downDrag();
+            },
+            downDrag() {
+                let _this = this;
+                this.oBox.onmousedown = function (ev) {
+                    ev = ev || window.event;
+                    let disX = ev.pageX - this.offsetLeft;
+                    let disY = ev.pageY - this.offsetTop;
+                    _this.moveDarg(disX, disY);
+                    _this.upDarg();
+                }
+            },
+            moveDarg(disX, disY) {
+                let _this = this;
+                document.onmousemove = function (ev) {
+                    ev = ev || window.event;
+                    _this.oBox.style.left = ev.pageX - disX + 'px';
+                    _this.oBox.style.top = ev.pageY - disY + 'px';
+                }
+            },
+            upDarg() {
+                let _this = this;
+                document.onmouseup = function () {
+                    document.onmousemove = document.onmouseup = null;
+                }
+            }
+        }
+        Object.assign({}, Darg).init('.box')
+        Object.assign({}, Darg).init('.box2')
+        Object.assign({}, Darg).init('.box3')
+        // 2, 采用工厂模式, 创建一个函数, 将拖拽功能封装在函数内
+        // 3, 采用构造函数, 创建一个构造函数, 将拖拽功能封装在函数内
+    </script>
+</body>
+
+</html>
