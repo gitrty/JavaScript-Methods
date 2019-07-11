@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		html,
+		body {
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
+			background: url("./images/bg.jpg") no-repeat;
+			background-size: cover;
+			position: absolute;
+		}
+	</style>
+	<script src="./toyo.js"></script>
+</head>
+
+<body>
+
+	<script>
+		class Fireworm {
+			// 生成初始随机位置
+			randomPosition() {
+				let rp = {
+					left: parseInt(document.documentElement.clientWidth * Math.random()),
+					top: parseInt(document.documentElement.clientHeight * Math.random())
+				}
+				this.createFire(rp);
+			}
+			// 生成运动随机位置->解决直接调用randomPosition()会触发this.createFire(rp)生成新的div的问题
+			randomPosition2() {
+				let rp = {
+					left: parseInt(document.documentElement.clientWidth * Math.random()),
+					top: parseInt(document.documentElement.clientHeight * Math.random())
+				}
+				return rp;
+			}
+			// 创建萤火虫
+			createFire(rp) {
+				let newDiv = document.createElement('div');
+				this.fire = newDiv;
+				this.fire.style.position = 'absolute';
+				this.fire.style.width = '30px';
+				this.fire.style.height = '30px';
+				this.fire.style.left = rp.left + 'px';
+				this.fire.style.top = rp.top + 'px';
+				this.fire.style.background = 'url(./images/1.jpg) no-repeat 0 0/100%';
+				document.body.appendChild(this.fire);
+				this.fireMove()
+			}
+			fireMove() {
+				setInterval(() => {
+					animate_slow(this.fire, this.randomPosition2());
+				}, 1500)
+			}
+		}
+		setInterval(() => {
+			new Fireworm().randomPosition()
+		}, 3000)
+
+	</script>
+</body>
+
+</html>
