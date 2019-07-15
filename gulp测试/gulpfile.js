@@ -5,6 +5,7 @@ var minifyCss = require('gulp-minify-css');  //压缩css文件
 var watch = require('gulp-watch');  // 文件监听 => 热加载
 var rename = require('gulp-rename');   // 打包后的文件重命名
 var connect = require('gulp-connect');   // 开启服务器 模块
+var babel = require('gulp-babel');
 
 // 监听配置目录下的文件  =>  热加载
 gulp.task('watchs', function () {
@@ -48,8 +49,11 @@ gulp.task('css', function () {
 
 gulp.task('js', function () {
     return gulp.src('./src/js/*.js')
+        .pipe(babel({   //编译es6文件
+            presets:["@babel/preset-env"]
+        }))
         .pipe(uglify())
-        .pipe(rename('index.min.js'))
+        .pipe(rename('index.min.js'))   //使用rename后注意改压缩后的引入文件名
         .pipe(gulp.dest('./dest/src/js'))
         .pipe(connect.reload())
 });

@@ -1,5 +1,5 @@
 var a = 10;
-var c = 100;
-console.info(c);
-var num = 111;
+let arr = ['a', 'b', 'c', 'd'];
+arr.includes('a')
+console.info(arr.includes('a'));
 

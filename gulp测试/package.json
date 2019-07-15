@@ -3,6 +3,9 @@
     "gulp": "^4.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "gulp-babel": "^8.0.0",
     "gulp-connect": "^5.7.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-minify-html": "^1.0.6",
