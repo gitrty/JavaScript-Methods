@@ -245,3 +245,55 @@ let animate_slow = (el, json, callback) => {
         // 默认30ms ,可自定义
     }, 30);
 }
+
+//************************************************************************************
+// 7.1 ajax 带参数的get方式封装
+// 调用方法 : ajax_get( type , url , data , cbVal=>{} )
+// type:同步/异步(true/false)  url:接口地址  data:需要传递的参数(键值对)  回调函数:参数cbVal为后台返回的数据
+/**
+ * @name 创建XHR核心对象
+ * @returns {Object}
+ */
+let createXHR = () => {
+    if (window.XMLHttpRequest) {
+        // 现代浏览器兼容
+        return new XMLHttpRequest();
+    }
+    // IE兼容
+    return new ActiveXObject('Microsoft.XMLHttp');
+}
+/**
+ * @name 拼接参数 将键值对拼接为字符串参数
+ * @param {obj} json 键值对
+ * @returns {String}
+ */
+let getparams = json => {
+    let str = '';
+    for (let k of Object.keys(json)) {
+        str += k + '=' + json[k] + '&';
+    }
+    // 删除字符串中最后一个&符号
+    let str2 = str.substr(0, str.length - 2);
+    return str2;
+}
+// *********封装*********
+/**
+ * 
+ * @param {boolean} type 
+ * @param {String} url 
+ * @param {Obj} data 键值对型数据
+ * @param {Function} callback 回调函数参数为后台返回数据
+ */
+let ajax_get = (type, url, data, callback) => {
+    let xhr = createXHR();
+    xhr.open('get', url + '?' + getparams(data), type);
+    xhr.send(null);
+    xhr.onreadystatechange = () => {
+        if (xhr.status == 200 && xhr.readyState == 4) {
+            if (typeof (callback == 'function')) {
+                // 回调函数中的参数为后台的返回值
+                callback(xhr.responseText);
+            }
+        }
+    }
+}
