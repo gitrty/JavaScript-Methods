@@ -6,19 +6,21 @@ var watch = require('gulp-watch');  // 文件监听 => 热加载
 var rename = require('gulp-rename');   // 打包后的文件重命名
 var connect = require('gulp-connect');   // 开启服务器 模块
 var babel = require('gulp-babel');
+var sass = require('gulp-sass');
 
 // 监听配置目录下的文件  =>  热加载
 gulp.task('watchs', function () {
     // 监听目录下的文件,若有改变,自动执行gulp.series()中的命令
-    gulp.watch('./index.html',gulp.series('html-index'));   //监听首页html文件
+    gulp.watch('./index.html', gulp.series('html-index'));   //监听首页html文件
     gulp.watch('./src/html/*.html', gulp.series('html'));
     gulp.watch('./src/css/*.css', gulp.series('css'));
+    gulp.watch('./src/css/*scss', gulp.series('sass'));
     gulp.watch('./src/js/*.js', gulp.series('js'));
 })
 
 gulp.task('connect', function () {
     connect.server({
-        root: 'src',
+        root: './',
         // ip:'localhost:8080'  默认localhost:8080端口
         livereload: true,  //热加载
         port: 9900  //端口号
@@ -47,10 +49,16 @@ gulp.task('css', function () {
         .pipe(connect.reload())
 })
 
+gulp.task('sass', function () {
+    return gulp.src('./src/css/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./dest/src/css'))
+})
+
 gulp.task('js', function () {
     return gulp.src('./src/js/*.js')
         .pipe(babel({   //编译es6文件
-            presets:["@babel/preset-env"]
+            presets: ["@babel/preset-env"]
         }))
         .pipe(uglify())
         .pipe(rename('index.min.js'))   //使用rename后注意改压缩后的引入文件名
@@ -58,4 +66,4 @@ gulp.task('js', function () {
         .pipe(connect.reload())
 });
 
-gulp.task('default', gulp.series(gulp.parallel('connect', 'watchs', 'html-index', 'html', 'css', 'js')))
+gulp.task('default', gulp.series(gulp.parallel('connect', 'watchs', 'html-index', 'html', 'css', 'sass', 'js')))

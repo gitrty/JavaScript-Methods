@@ -247,7 +247,7 @@ let animate_slow = (el, json, callback) => {
 }
 
 //************************************************************************************
-// 7.1 ajax 带参数的get方式封装
+// 7.1 ajax 带参数的get/post方式封装
 // 调用方法 : ajax_get( type , url , data , cbVal=>{} )
 // type:同步/异步(true/false)  url:接口地址  data:需要传递的参数(键值对)  回调函数:参数cbVal为后台返回的数据
 /**
@@ -272,9 +272,8 @@ let getparams = json => {
     for (let k of Object.keys(json)) {
         str += k + '=' + json[k] + '&';
     }
-    // 删除字符串中最后一个&符号
-    let str2 = str.substr(0, str.length - 2);
-    return str2;
+    str = str.slice(0, str.length - 1);
+    return str;
 }
 // *********封装*********
 /**
@@ -288,12 +287,90 @@ let ajax_get = (type, url, data, callback) => {
     let xhr = createXHR();
     xhr.open('get', url + '?' + getparams(data), type);
     xhr.send(null);
+    // 当状态改变自动触发这个事件 ↓
     xhr.onreadystatechange = () => {
         if (xhr.status == 200 && xhr.readyState == 4) {
             if (typeof (callback == 'function')) {
                 // 回调函数中的参数为后台的返回值
                 callback(xhr.responseText);
             }
+        }
+    }
+}
+// post方式
+let ajax_post = (type, url, data, callback) => {
+    let xhr = createXHR();
+    xhr.open('post', url, type);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(getparams(data));
+    xhr.onreadystatechange = () => {
+        if (xhr.status == 200 && xhr.readyState == 4) {
+            if (callback) {
+                callback(xhr.responseText);
+            }
+        }
+    }
+}
+
+//************************************************************************************
+// 7.2 模拟Jquery封装 ajax
+/**
+ * @name 模拟Jquery封装
+ * @param {Obj} opts 
+ */
+// 调用方法 : ↓
+// ajax({
+//     url:'xxx'  // 必须
+//     data: { },  // 参数  默认为空  非必须
+//     type: "post",  // 请求方式  默认get  非必须
+//     async: true,  // 同步/异步  默认异步  非必须 
+//     dataType: 'json', // 回调参数类型  默认json  非必须 
+//     success(cbVal) { // 成功后的回调函数  非必须 
+//         console.log(cbVal);
+//     },
+//     error() {  // 状态不为200时的回调函数  非必须 
+//         console.info('请求失败');
+//     }
+// })
+let ajax = opts => {
+    opts.type = opts.type == undefined ? 'get' : opts.type;   //默认get方式
+    opts.async = opts.async == undefined ? 'true' : opts.async;   //默认异步
+    opts.dataType = opts.dataType == undefined ? 'json' : opts.dataType;  // 默认使用json格式
+    opts.data = opts.data == undefined ? {} : opts.data;
+
+    let xhr = createXHR();
+    // 判断请求方式 get/post
+    if (opts.type == 'get') {
+        xhr.open('get', opts.url + '?' + getparams(opts.data), opts.async);
+        xhr.send(null);
+    } else {
+        xhr.open('post', opts.url, opts.async);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(getparams(opts.data));
+    }
+    // 判断同步/异步方式
+    if (opts.async) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                getResult()
+            }
+        }
+    } else {
+        getResult();
+    }
+    // 处理回调数据
+    let getResult = () => {
+        if (xhr.status == 200) {
+            let res;
+            // 若回调参数为 json 类型,则将其进行JSON.parse转换
+            if (opts.dataType == "json") {
+                res = JSON.parse(xhr.responseText); //返回json数据
+            } else {
+                res = xhr.responseText; //返回纯text
+            }
+            opts.success(res);
+        } else {
+            opts.error();
         }
     }
 }
