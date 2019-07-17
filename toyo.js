@@ -374,3 +374,47 @@ let ajax = opts => {
         }
     }
 }
+
+//************************************************************************************
+// 7.3 JSONP方式封装封装
+/**
+ * @name JSONP方式封装
+ * @param {String} url 
+ * @param {Object} data 
+ * @param {String} jsonpCallback 
+ * @param {Function} success 
+ */
+// 调用方法 :  jsonp(url, parama,jsonpCallback,data=>{console.info(data)})  
+// let url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su';
+// let parama = {
+//     wd:'nihao'
+// };
+// jsonpCallback = 'cb';// 回调函数的名称  通常为cb或callback
+let getparams2 = json => {
+    let str = '';
+    for (let k of Object.keys(json)) {
+        str += k + '=' + json[k] + '&';
+    }
+    // str = str.slice(0, str.length - 1);
+    return str;
+}
+let jsonp = (url, data, jsonpCallback, success) => {
+    //1.随机生成一个函数名称
+    let fnName = "toyo_" + Date.now();
+    //2.把随机的函数名绑定到window,并绑定函数
+    window[fnName] = success;
+    //3.创建一个script;
+    let oScript = document.createElement("script");
+    //4.1给script绑定 src的路径
+    url = url + "?" + getparams2(data) + jsonpCallback + "=" + fnName;
+    oScript.setAttribute('src', url);
+    //4.2 让scriot去加载数据(绑定到body上)
+    document.body.appendChild(oScript);
+    // 凡是带有 src的标签,都会有一个 onload事件!!!
+    oScript.addEventListener("load", function () {
+        //5.数据加载完成后,销毁script
+        this.remove();
+        //6.消除随机函数
+        delete (window[fnName]);
+    })
+}
