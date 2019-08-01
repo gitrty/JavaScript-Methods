@@ -17,7 +17,7 @@ http.createServer((req, res) => {
         result.msg = '登录成功';
         result.status = 1;
     }
-    
+
     res.end(JSON.stringify(result));
     // 设置服务端口 , 并监听服务
 }).listen(8082, () => {
