@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev":"nodemon server.js"
+  },
+  "devDependencies": {
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
