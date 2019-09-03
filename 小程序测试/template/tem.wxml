@@ -1,0 +1,6 @@
+<template name='tem'>
+  <view>
+    我是的公用部分=>{{text}}
+  </view>
+</template>
+

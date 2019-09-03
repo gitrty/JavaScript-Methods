@@ -1,0 +1,31 @@
+<!-- wx:for , wx:for-item -->
+<view wx:for="{{list1}}" wx:for-item="row" wx:key="row" class="row">
+  <view wx:for="{{list2}}" wx:for-item="col" wx:key="col" wx:if="{{col<=row}}">
+    {{col}}*{{row}}={{col*row}}
+  </view>
+</view>
+
+<!-- wx:key -->
+<view wx:for="{{switchArr}}" wx:key="*this">
+  <switch>{{item}}</switch>
+</view>
+<button bindtap="update">按钮</button>
+
+<!-- import - 动态参数公用模板 -->
+<import src="../../template/tem.wxml" />
+<template is="tem" wx:for="{{temArr}}" data="{{...item}}" wx:key="{{text}}" />
+
+<!-- include - 公用静态模板 -->
+<include src="../../template/static.wxml" />
+
+<!-- 动态属性绑定 以及 页面跳转 参数传递 -->
+<view wx:for="{{router}}" wx:key="{{id}}" data-id="{{item.id}}" data-title="{{item.title}}" bindtap="routerLink">
+  <text>{{item.id}}</text>-
+  <text>{{item.title}}</text>
+</view>
+
+<!-- 阻止事件冒泡 => 将bind替换为catch -->
+<view class="big" bindtap="bigClick">
+  <view class="small" catchtap="smallClick">
+  </view>
+</view>

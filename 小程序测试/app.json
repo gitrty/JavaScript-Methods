@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/test/test",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/news/news",
+    "pages/active/active"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#eee",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "0826 - Wechat",
+    "enablePullDownRefresh": true,
+    "backgroundColor": "indianred",
+    "onReachBottomDistance": 50
+  },
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "color": "ccc",
+    "selectedColor": "1aad16",
+    "backgroundColor": "fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "img/首页.png",
+        "selectedIconPath": "img/首页_selected.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "目录",
+        "iconPath": "img/mulu.png",
+        "selectedIconPath": "img/mulu_selected.png"
+      },
+      {
+        "pagePath": "pages/news/news",
+        "text": "新闻",
+        "iconPath": "img/xiangmu.png",
+        "selectedIconPath": "img/xiangmu_selected.png"
+      },
+      {
+        "pagePath": "pages/test/test",
+        "text": "测试",
+        "iconPath": "img/geren.png",
+        "selectedIconPath": "img/geren (1).png"
+      }
+    ]
+  }
+}
