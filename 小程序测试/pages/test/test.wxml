@@ -29,3 +29,6 @@
   <view class="small" catchtap="smallClick">
   </view>
 </view>
+
+<!-- wx:request 请求(已封装) -->
+<view>用户当前位置为 : {{basic}}</view>
